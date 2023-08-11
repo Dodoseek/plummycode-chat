@@ -1,0 +1,9 @@
+[MASTER]
+load-plugins=pylint_django, pylint_django.checkers.migrations, pylint-celery
+django-settings-module=plummycodeChat.settings
+
+[FORMAT]
+max-line-length=120
+
+[MESSAGES CONTROL]
+disable=missing-docstring

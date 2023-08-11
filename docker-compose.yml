@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:alpine
+    # restart: always
+    ports:
+      - 6379:6379
+
+  mysql:
+    image: mysql:latest
+    # restart: always
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: webchat
+      MYSQL_DATA: /data/mysql
+    ports:
+      - 3336:3306
+    volumes:
+       - plummycodechat_data:/data/mysql
+
+  adminer:
+    image: adminer
+    # restart: always
+    ports:
+      - 8080:8080    
+
+volumes:
+  plummycodechat_data:
