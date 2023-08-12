@@ -16,21 +16,20 @@ Including another URLconf
 """
 # pylint: disable=C0103
 
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
-from .api import (AcceptRequestView, CreateRequestView, FriendListView,
-                  GetReceiverRequestView, GetSenderRequestView,
-                  RemoveFromFriendListView, UpdateRequestView)
+from .api import (FriendListViewSet, ReceiverRequestViewSet, RequestViewSet,
+                  UpdateRequestViewSet)
+
+router = routers.SimpleRouter()
+router.register(r'friends', FriendListViewSet, basename='friendlist')
+router.register(r'request', RequestViewSet, basename='request')
+router.register(r'receiver', ReceiverRequestViewSet, basename='receiver')
+router.register(r'update', UpdateRequestViewSet, basename='update')
 
 app_name = "friendlist"
 
 urlpatterns = [
-    path('<int:user>', FriendListView.as_view(), name='friendlist'),
-    path('remove/<int:user>', RemoveFromFriendListView.as_view(), name='delete_friendlist'),
-
-    path('request/receiver/', GetReceiverRequestView.as_view(), name='request_receiver_get'),
-    path('request/sender/', GetSenderRequestView.as_view(), name='request_sender_get'),
-    path('request/send/', CreateRequestView.as_view(), name="send_request"),
-    path('request/update/<int:receiver>', UpdateRequestView.as_view(), name="update_request"),
-    path('request/accept/<int:sender>', AcceptRequestView.as_view(), name="accept_request"),
+    path('', include(router.urls)),
 ]

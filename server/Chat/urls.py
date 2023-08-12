@@ -16,13 +16,18 @@ Including another URLconf
 """
 # pylint: disable=C0103
 
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
-from .api import CreateChatView
+from .api import ChatView
 
 app_name = "chat"
 
+
+router = routers.SimpleRouter()
+router.register(r'action', ChatView, basename='chat')
+
 urlpatterns = [
-    path('', CreateChatView.as_view(), name='create_chat'),
-    path('', CreateChatView.as_view(), name='my_chats'),
+    # path('', CreateChatView.as_view(), name='create_chat'),
+    path('', include(router.urls)),
 ]

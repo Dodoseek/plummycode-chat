@@ -1,6 +1,4 @@
 """ Permissions for Chat Model """
-import json
-
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
@@ -14,9 +12,8 @@ User = get_user_model()
 
 class ItHasFriends(BasePermission):
     """
-    Checks that the first id from the list of users 
-    has friends of those who are in the list after him.
-
+    Verifies that the user who sent the request,
+    has friends from those who are on the list after him.   
     """
     @staticmethod
     def user_friends_queryset(user_id: int):
@@ -39,17 +36,44 @@ class ItHasFriends(BasePermission):
         Return `True` if permission is granted, `False` otherwise.
         """
         if request.method not in SAFE_METHODS:
-            queryset = self.user_friends_queryset(request.user.id)
+            queryset = self.user_friends_queryset(request.user.user_id)
 
             if queryset is None:
-                return False
+                raise PermissionDenied(
+                    detail=_(
+                        "You can't create a chat with a person you don't have in your friends list."
+                    ))
 
-            friends = json.loads(request.body).get('users', [])[1:]
+            friends = request.data['users']
 
             if not self.are_friends_in_queryset(friends, queryset):
                 raise PermissionDenied(
                     detail=_(
                         "You can't create a chat with a person you don't have in your friends list."
+                    ))
+
+            return True
+
+        return True
+
+
+class UsersListNotEmpty(BasePermission):
+    """
+    Checks that the sent list of users is not empty
+
+    """
+
+    def has_permission(self, request: HttpRequest, view):
+        """
+        Return `True` if permission is granted, `False` otherwise.
+        """
+        if request.method not in SAFE_METHODS:
+            friends = request.data['users']
+
+            if friends == []:
+                raise PermissionDenied(
+                    detail=_(
+                        "The list of users cannot be empty."
                     ))
 
             return True

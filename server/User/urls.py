@@ -16,19 +16,25 @@ Including another URLconf
 """
 # pylint: disable=C0103
 
-from django.urls import path
-from rest_framework_simplejwt.views import (TokenObtainPairView,
-                                            TokenRefreshView, TokenVerifyView)
+from django.urls import include, path
+from rest_framework import routers
 
-from .api import AllUsersView, CreateUserView, UserView
+from .api import AllUsersView, UserView
+from .authentication import TokenObtain, TokenRefresh, TokenVerify
+
+# from rest_framework_simplejwt.views import (TokenObtainPairView,
+#                                             TokenRefreshView, TokenVerifyView)
+
+
+router = routers.SimpleRouter()
+router.register(r'account', UserView, basename='user')
 
 app_name = "user"
 
 urlpatterns = [
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('register/', CreateUserView.as_view(), name='register'),
-    path('<int:pk>/', UserView.as_view(), name='get_user'),
-    path('', AllUsersView.as_view(), name="all_users"),
+    path('token/refresh/', TokenRefresh.as_view(), name='token_refresh'),
+    path('token/', TokenObtain.as_view(), name='token_obtain_pair'),
+    path('token/verify/', TokenVerify.as_view(), name='token_verify'),
+    path('', include(router.urls)),
+    path('', AllUsersView.as_view({'get': 'list'}), name="all_users"),
 ]

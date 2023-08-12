@@ -84,8 +84,7 @@ class FriendRequest(models.Model):
 
     def reject(self):
         """ The receiver rejected the request  """
-        self.is_active = False
-        self.save()
+        self.delete()
 
     class Meta:
         verbose_name = _("Friendship Request")

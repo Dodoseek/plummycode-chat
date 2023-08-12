@@ -5,8 +5,8 @@
 
 from django.conf import settings
 from django.db import models
-# from django.db.models.signals import pre_save
-# from django.dispatch import receiver
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from sorl.thumbnail import ImageField, get_thumbnail
 
@@ -16,19 +16,33 @@ User = settings.AUTH_USER_MODEL
 class Chat(models.Model):
     """ Chat Model """
     users = models.ManyToManyField(User, verbose_name=_('Users'), related_name='users')
+    image = ImageField(upload_to='chats/images/%d/%m/%Y',
+                       verbose_name=_("Image"), null=True)
 
     def __str__(self) -> str:
         return str(self.id)
+
+    @property
+    def pictures(self):
+        if self.image:
+            return [
+                get_thumbnail(self.image, '100x100', format="WEBP", quality=70),
+                get_thumbnail(self.image, '300x300', format="WEBP", quality=70),
+                get_thumbnail(self.image, '600x600', format="WEBP", quality=70),
+                get_thumbnail(self.image, '1000x1000', format="WEBP", quality=70),
+                get_thumbnail(self.image, "1200x1200", format="WEBP", quality=100),
+            ]
+        return None
 
     class Meta:
         verbose_name = _("Chat")
         verbose_name_plural = _("Chats")
 
 
-# @receiver(pre_save, sender=Chat)
-# def chat_pre_created_handler(instance: Chat, *args, **kwargs):
-#     if not instance.image:
-#         instance.image = "avatar_default.jpg"
+@receiver(pre_save, sender=Chat)
+def chat_pre_created_handler(instance: Chat, *args, **kwargs):
+    if not instance.image:
+        instance.image = "avatar_default.jpg"
 
 
 class Message(models.Model):

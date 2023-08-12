@@ -13,6 +13,12 @@ class IsOwnerOrAdmin(BasePermission):
 
     """
 
+    def has_permission(self, request: HttpRequest, view):
+        """
+        Return `True` if permission is granted, `False` otherwise.
+        """
+        return True
+
     def has_object_permission(self, request: HttpRequest, view, obj):
         """
         Return `True` if permission is granted, `False` otherwise.

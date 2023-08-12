@@ -2,9 +2,11 @@
 
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import permissions
-from rest_framework.generics import (CreateAPIView, GenericAPIView,
-                                     ListAPIView, RetrieveAPIView)
+from rest_framework.mixins import (CreateModelMixin, ListModelMixin,
+                                   RetrieveModelMixin)
+from rest_framework.viewsets import GenericViewSet
 
 from .permissions import IsOwnerOrAdmin
 from .serializers import AllUsersSerializer, UserSerializer
@@ -12,7 +14,8 @@ from .serializers import AllUsersSerializer, UserSerializer
 User = get_user_model()
 
 
-class UserView(RetrieveAPIView, GenericAPIView):
+@extend_schema(tags=["User"])
+class UserView(RetrieveModelMixin, CreateModelMixin, GenericViewSet):
     """ 
     Takes the user *ID* and returns his 
     id, username, first_name, last_name, email, 
@@ -21,15 +24,39 @@ class UserView(RetrieveAPIView, GenericAPIView):
     """
     permission_classes = [
         IsOwnerOrAdmin,
-        permissions.IsAuthenticated,
     ]
     serializer_class = UserSerializer
 
+    @extend_schema(
+        description="Accepts the *id* of the user from the URL and shows all his friends",
+        summary='Create a user',
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    @extend_schema(
+        description="Takes the user ID and returns his id,"
+        "username, first_name, last_name, email, image and slug",
+        summary='Get a detailed user',
+        parameters=[
+            OpenApiParameter(
+                name='id',
+                location=OpenApiParameter.PATH,
+                description='user *id* parameter',
+                required=True,
+                type=int
+            ),
+        ],
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     def get_queryset(self):
-        return User.objects.all()
+        return User.objects.filter(id=self.request.user.user_id)
 
 
-class AllUsersView(ListAPIView, GenericAPIView):
+@extend_schema(tags=["User"])
+class AllUsersView(ListModelMixin, GenericViewSet):
     """
     Accepts the number of pages 
     and filters and returns a list 
@@ -44,18 +71,13 @@ class AllUsersView(ListAPIView, GenericAPIView):
     ]
     filter_backends = [DjangoFilterBackend]
 
+    @extend_schema(
+        description="Takes the number of pages and filters and returns a list"
+        "of all users with the fields id first name last name",
+        summary='Get all users',
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     def get_queryset(self):
         return User.objects.all()
-
-
-class CreateUserView(CreateAPIView):
-    """ 
-    Takes *username*, *password*, first_name, 
-    last_name, email, user and returns its 
-    created instance 
-
-    """
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = UserSerializer

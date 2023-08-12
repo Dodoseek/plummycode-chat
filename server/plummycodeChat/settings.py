@@ -215,6 +215,7 @@ CORS_ALLOWED_ORIGINS = [
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS_SETTINGS
 
+
 SPECTACULAR_SETTINGS = {
     'SCHEMA_PATH_PREFIX': r'/api/v[1-9]',
     'SCHEMA_PATH_PREFIX_TRIM': False,
@@ -222,10 +223,15 @@ SPECTACULAR_SETTINGS = {
     "DEFAULT_QUERY_MANAGER": '_default_manager',
 
     'TITLE': "The Chat API from the PlummyCode team",
-    'DESCRIPTION': 'Thanks to this application, you can test working with the database using the REST API.',
+    'DESCRIPTION':
+    'Thanks to this application, you can test working with the database using the REST API.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    'CONTACT': {"name": "Andrew Glushnev", 'email': "glushnev22@gmail.com", "url": "https://andrewglushnev.ru/"},
+    'CONTACT': {
+        "name": "Andrew Glushnev",
+        'email': "glushnev22@gmail.com",
+        "url": "https://andrewglushnev.ru/"
+    },
     "SWAGGER_UI_SETTINGS": {
         "filter": True,  # включить поиск по тегам
         "defaultModelRendering": "example",
@@ -255,4 +261,5 @@ SPECTACULAR_SETTINGS = {
     "COMPONENT_SPLIT_REQUEST": True,
     'SWAGGER_UI_DIST': "//unpkg.com/swagger-ui-dist@latest",  # shorthand to use the sidecar instead
     'SWAGGER_UI_FAVICON_HREF': STATIC_URL + "plummylogo.svg",
+    'PREPROCESSING_HOOKS': ["FriendList.excluded_path.custom_preprocessing_hook"]
 }
