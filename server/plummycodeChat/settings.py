@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
@@ -18,7 +19,6 @@ from dotenv import load_dotenv
 
 from .jazzmin_settings import (JAZZMIN_ADMIN_SETTINGS,
                                JAZZMIN_UI_TWEAKS_SETTINGS)
-from .jwt_settings import SIMPLE_JWT_SETTINGS
 
 load_dotenv()
 
@@ -55,12 +55,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'User.apps.UserConfig',
     'Chat.apps.ChatConfig',
     'FriendList.apps.FriendlistConfig',
     'rest_framework',
-    'rest_framework_simplejwt',
+    'djoser',
+    'knox',
 ]
+
+SITE_ID = 1
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -69,8 +73,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        'knox.auth.TokenAuthentication',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -138,12 +143,12 @@ ASGI_APPLICATION = "plummycodeChat.asgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv("ENGINE", "django.db.backends.mysql"),
-        'NAME': os.getenv("NAME", "django_dx"),
-        'USER': os.getenv("USER", "django_dx"),
-        'PASSWORD': os.getenv("PASSWORD", "django_dx"),
-        'HOST': os.getenv("HOST", "127.0.0.1"),
-        'PORT': os.getenv("PORT", "3306"),
+        'ENGINE': os.getenv("DB_ENGINE", "django.db.backends.mysql"),
+        'NAME': os.getenv("DB_NAME", "django_dx"),
+        'USER': os.getenv("DB_USER", "django_dx"),
+        'PASSWORD': os.getenv("DB_PASSWORD", "django_dx"),
+        'HOST': os.getenv("DB_HOST", "127.0.0.1"),
+        'PORT': os.getenv("DB_PORT", "3306"),
     }
 }
 
@@ -188,7 +193,12 @@ USE_TZ = True
 
 JAZZMIN_SETTINGS = JAZZMIN_ADMIN_SETTINGS
 
-SIMPLE_JWT = SIMPLE_JWT_SETTINGS
+CSRF_COOKIE_SAMESITE = 'Strict'
+SESSION_COOKIE_SAMESITE = 'Strict'
+
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_HTTPONLY = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -210,8 +220,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "User.User"
 
 CORS_ALLOWED_ORIGINS = [
-    os.getenv("CORS_ALLOWED_ORIGINS", "http://127.0.0.1:3000"),
+    os.getenv("CORS_ALLOWED_ORIGINS", 'http://127.0.0.1:3000'),
 ]
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_TRUSTED_ORIGINS = [
+    os.getenv("CORS_ALLOWED_ORIGINS", 'http://127.0.0.1:3000'),
+]
+CORS_ALLOW_CREDENTIALS = True
+
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS_SETTINGS
 
@@ -262,4 +278,81 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_DIST': "//unpkg.com/swagger-ui-dist@latest",  # shorthand to use the sidecar instead
     'SWAGGER_UI_FAVICON_HREF': STATIC_URL + "plummylogo.svg",
     'PREPROCESSING_HOOKS': ["FriendList.excluded_path.custom_preprocessing_hook"]
+}
+
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+
+    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+
+    'LOGOUT_ON_PASSWORD_CHANGE': True,
+
+    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [],
+
+    'HIDE_USERS': False,
+
+    'TOKEN_MODEL': 'knox.models.AuthToken',
+
+    'SERIALIZERS': {
+        'activation': 'djoser.serializers.ActivationSerializer',
+        'password_reset': 'djoser.serializers.SendEmailResetSerializer',
+        'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
+        'password_reset_confirm_retype': 'djoser.serializers.PasswordResetConfirmRetypeSerializer',
+        'set_password': 'djoser.serializers.SetPasswordSerializer',
+        'set_password_retype': 'djoser.serializers.SetPasswordRetypeSerializer',
+        'set_username': 'djoser.serializers.SetUsernameSerializer',
+        'set_username_retype': 'djoser.serializers.SetUsernameRetypeSerializer',
+        'username_reset': 'djoser.serializers.SendEmailResetSerializer',
+        'username_reset_confirm': 'djoser.serializers.UsernameResetConfirmSerializer',
+        'username_reset_confirm_retype': 'djoser.serializers.UsernameResetConfirmRetypeSerializer',
+        'user_create': 'User.serializers.UserSerializer',
+        'user_create_password_retype': 'djoser.serializers.UserCreatePasswordRetypeSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+        'user': 'User.serializers.AllUsersSerializer',
+        'current_user': 'User.serializers.UserSerializer',
+        'token': 'djoser.serializers.TokenSerializer',
+        'token_create': 'djoser.serializers.TokenCreateSerializer',
+    },
+    'EMAIL': {
+        'activation': 'djoser.email.ActivationEmail',
+        'confirmation': 'djoser.email.ConfirmationEmail',
+        'password_reset': 'djoser.email.PasswordResetEmail',
+        'password_changed_confirmation': 'djoser.email.PasswordChangedConfirmationEmail',
+        'username_changed_confirmation': 'djoser.email.UsernameChangedConfirmationEmail',
+        'username_reset': 'djoser.email.UsernameResetEmail',
+    },
+    'CONSTANTS': {
+        'messages': 'djoser.constants.Messages',
+    },
+    'PERMISSIONS': {
+        'activation': ['rest_framework.permissions.AllowAny'],
+        'password_reset': ['rest_framework.permissions.AllowAny'],
+        'password_reset_confirm': ['rest_framework.permissions.AllowAny'],
+        'set_password': ['User.permissions.IsOwnerOrAdmin'],
+        'username_reset': ['rest_framework.permissions.AllowAny'],
+        'username_reset_confirm': ['rest_framework.permissions.AllowAny'],
+        'set_username': ['User.permissions.IsOwnerOrAdmin'],
+        'user_create': ['rest_framework.permissions.AllowAny'],
+        'user_delete': ['User.permissions.IsOwnerOrAdmin'],
+        'user': ['User.permissions.IsOwnerOrAdmin', 'rest_framework.permissions.IsAuthenticated'],
+        'user_list': ['User.permissions.IsOwnerOrAdmin'],
+        'token_create': ['rest_framework.permissions.AllowAny'],
+        'token_destroy': ['rest_framework.permissions.IsAuthenticated', 'User.permissions.IsOwnerOrAdmin'],
+    }
+}
+
+REST_KNOX = {
+    'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+    'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+    'TOKEN_TTL': timedelta(hours=10),
+    'USER_SERIALIZER': 'User.serializers.UserSerializer',
+    'TOKEN_LIMIT_PER_USER': None,
+    'AUTO_REFRESH': False,
+    # 'EXPIRY_DATETIME_FORMAT': api_settings.DATETME_FORMAT,
 }

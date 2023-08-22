@@ -49,7 +49,7 @@ class FriendListViewSet(RetrieveModelMixin, DestroyModelMixin, GenericViewSet):
     )
     def destroy(self, request, *args, **kwargs):
         friend = get_object_or_404(get_user_model(), pk=kwargs['user'])
-        user = get_object_or_404(get_user_model(), pk=self.request.user.user_id)
+        user = get_object_or_404(get_user_model(), pk=self.request.user.id)
 
         instance = self.get_queryset()
         users_friendlist = get_object_or_404(FriendList, user=friend)
@@ -114,7 +114,7 @@ class RequestViewSet(CreateModelMixin,
     )
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        sender = get_object_or_404(get_user_model(), pk=request.user.user_id)
+        sender = get_object_or_404(get_user_model(), pk=request.user.id)
         serializer.is_valid(raise_exception=True)
         serializer.validated_data['sender'] = sender
         self.perform_create(serializer)
@@ -157,11 +157,11 @@ class RequestViewSet(CreateModelMixin,
         method = self.request.method
         if method in ("DELETE", "POST"):
             return FriendRequest.objects.filter(is_active=True,
-                                                sender__id=self.request.user.user_id)
+                                                sender__id=self.request.user.id)
         self.lookup_field = "sender"
         if method in ("GET",):
             return FriendRequest.objects.filter(is_active=True,
-                                                sender__id=self.request.user.user_id)
+                                                sender__id=self.request.user.id)
 
 
 @extend_schema(tags=["Fiend List"])
@@ -198,7 +198,7 @@ class UpdateRequestViewSet(UpdateModelMixin, GenericViewSet):
 
     def get_queryset(self):
         return FriendRequest.objects.filter(is_active=True,
-                                            receiver__id=self.request.user.user_id)
+                                            receiver__id=self.request.user.id)
 
 
 @extend_schema(tags=["Fiend List"])

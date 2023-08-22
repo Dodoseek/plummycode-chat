@@ -52,7 +52,7 @@ class UserView(RetrieveModelMixin, CreateModelMixin, GenericViewSet):
         return super().retrieve(request, *args, **kwargs)
 
     def get_queryset(self):
-        return User.objects.filter(id=self.request.user.user_id)
+        return User.objects.filter(id=self.request.user.id)
 
 
 @extend_schema(tags=["User"])

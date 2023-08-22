@@ -42,7 +42,7 @@ class ChatView(CreateModelMixin, ListModelMixin, GenericViewSet):
         }
     )
     def create(self, request: HttpRequest, *args, **kwargs):
-        request.data['users'].insert(0, request.user.user_id)
+        request.data['users'].insert(0, request.user.id)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -65,7 +65,7 @@ class ChatView(CreateModelMixin, ListModelMixin, GenericViewSet):
 
     def get_queryset(self):
         if self.request.method == "GET":
-            return Chat.objects.filter(users__id=self.request.user.user_id)
+            return Chat.objects.filter(users__id=self.request.user.id)
         return Chat.objects.all()
 
 

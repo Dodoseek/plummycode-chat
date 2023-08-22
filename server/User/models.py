@@ -51,7 +51,7 @@ class User(AbstractUser):
                 get_thumbnail(self.image, '300x300', format="WEBP", quality=70),
                 get_thumbnail(self.image, '600x600', format="WEBP", quality=70),
                 get_thumbnail(self.image, '1000x1000', format="WEBP", quality=70),
-                get_thumbnail(self.image, "1200x1200", format="WEBP", quality=100),
+                get_thumbnail(self.image, "1200x1200", format="WEBP", quality=70),
             ]
         return None
 

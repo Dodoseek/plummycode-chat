@@ -17,24 +17,19 @@ Including another URLconf
 # pylint: disable=C0103
 
 from django.urls import include, path
+from djoser.views import UserViewSet
 from rest_framework import routers
 
-from .api import AllUsersView, UserView
-from .authentication import TokenObtain, TokenRefresh, TokenVerify
-
-# from rest_framework_simplejwt.views import (TokenObtainPairView,
-#                                             TokenRefreshView, TokenVerifyView)
-
+from .views import LoginView, LogoutAllView, LogoutView
 
 router = routers.SimpleRouter()
-router.register(r'account', UserView, basename='user')
+router.register(r'account', UserViewSet, basename='user')
 
 app_name = "user"
 
 urlpatterns = [
-    path('token/refresh/', TokenRefresh.as_view(), name='token_refresh'),
-    path('token/', TokenObtain.as_view(), name='token_obtain_pair'),
-    path('token/verify/', TokenVerify.as_view(), name='token_verify'),
+    path('token/login/', LoginView.as_view(), name='login'),
+    path('token/logout/', LogoutView.as_view(), name='logout'),
+    path('token/logout-all/', LogoutAllView.as_view(), name='logout-all'),
     path('', include(router.urls)),
-    path('', AllUsersView.as_view({'get': 'list'}), name="all_users"),
 ]

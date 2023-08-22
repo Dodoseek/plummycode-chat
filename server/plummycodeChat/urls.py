@@ -33,7 +33,9 @@ urlpatterns = i18n_patterns(
 )
 
 urlpatterns += [
-    path('api/v1/user/', include('User.urls')),
+    path('api/v1/users/', include('User.urls')),
+
+
     path('api/v1/chat/', include('Chat.urls')),
     path('api/v1/friendlist/', include('FriendList.urls')),
 

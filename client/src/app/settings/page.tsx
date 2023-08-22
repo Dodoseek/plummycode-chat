@@ -1,7 +1,12 @@
 import { NextPage } from 'next'
 
 const SettingsPage: NextPage = () => {
-  return <div>SettingsPage</div>
+
+  return (
+  <>
+  
+  </>
+  )
 }
 
 export default SettingsPage

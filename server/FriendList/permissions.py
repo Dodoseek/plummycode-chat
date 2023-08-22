@@ -18,7 +18,7 @@ class SenderIsNotReceiver(BasePermission):
         """
         Return `True` if permission is granted, `False` otherwise.
         """
-        if not request.data.get('receiver') == request.user.user_id:
+        if not request.data.get('receiver') == request.user.id:
             return True
         raise PermissionDenied(
             detail=_("You can't send a friend list request to yourself"))
@@ -35,7 +35,7 @@ class RequestDoesNotExist(BasePermission):
         """
         Return `True` if permission is granted, `False` otherwise.
         """
-        sender = request.user.user_id
+        sender = request.user.id
         if request.method == "POST":
             receiver = request.data.get('receiver')
             if not FriendRequest.objects.filter(Q(sender__id=sender, receiver__id=receiver) |
@@ -70,7 +70,7 @@ class NotInFriendList(BasePermission):
         """
         Return `True` if permission is granted, `False` otherwise.
         """
-        sender = request.user.user_id
+        sender = request.user.id
         if request.method == "POST":
             receiver = request.data.get('receiver')
             if not FriendList.objects.filter(Q(user__id=sender, friends__id=receiver) |

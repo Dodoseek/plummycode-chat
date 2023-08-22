@@ -1,7 +1,7 @@
 """ Serializers for User App """
 from django.contrib.auth import get_user_model
-from rest_framework.serializers import (CharField, ImageField, ListField,
-                                        ModelSerializer)
+from rest_framework.serializers import (CharField, DateTimeField, ImageField,
+                                        ListField, ModelSerializer, Serializer)
 
 User = get_user_model()
 
@@ -50,3 +50,21 @@ class AllUsersSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "username", "first_name", "last_name", "pictures", "slug")
+
+
+class UserLoginSerializer(ModelSerializer):
+    """ User's model Serializer """
+    class Meta:
+        model = User
+        fields = (
+            "email",
+            "password",
+        )
+
+
+# pylint: disable=W0223
+class UserLoginResponseSerializer(Serializer):
+    """ Response's model Serializer """
+    expiry = DateTimeField()
+    token = CharField()
+    user = UserSerializer()

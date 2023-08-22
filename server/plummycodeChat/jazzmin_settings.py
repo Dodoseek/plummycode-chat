@@ -73,7 +73,7 @@ JAZZMIN_ADMIN_SETTINGS = {
     "show_sidebar": True,
 
     # Whether to aut expand the menu
-    "navigation_expanded": False,
+    "navigation_expanded": True,
 
     # Hide these apps when generating side menu e.g (auth)
     "hide_apps": [],
@@ -99,6 +99,12 @@ JAZZMIN_ADMIN_SETTINGS = {
     "icons": {
         "auth": "far fa-object-group",
         "auth.Group": "fas fa-users",
+
+        "Knox": 'far fa-hdd',
+        "Knox.AuthToken": "fas fa-tag",
+
+        "Sites": 'far fa-map',
+        "Sites.Site": "fas fa-map",
 
         "User": "far fa-user",
         "User.User": "fas fa-user",

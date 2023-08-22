@@ -16,11 +16,11 @@ class ItHasFriends(BasePermission):
     has friends from those who are on the list after him.   
     """
     @staticmethod
-    def user_friends_queryset(user_id: int):
+    def user_friends_queryset(id: int):
         """
         Returns a queryset with a list of the user's friends.
         """
-        user = User.objects.get(id=user_id)
+        user = User.objects.get(id=id)
         friendlist = FriendList.objects.get(user=user)
         return friendlist.friends.values_list('user', flat=True)
 
@@ -36,7 +36,7 @@ class ItHasFriends(BasePermission):
         Return `True` if permission is granted, `False` otherwise.
         """
         if request.method not in SAFE_METHODS:
-            queryset = self.user_friends_queryset(request.user.user_id)
+            queryset = self.user_friends_queryset(request.user.id)
 
             if queryset is None:
                 raise PermissionDenied(
