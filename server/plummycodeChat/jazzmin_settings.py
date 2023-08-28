@@ -100,9 +100,6 @@ JAZZMIN_ADMIN_SETTINGS = {
         "auth": "far fa-object-group",
         "auth.Group": "fas fa-users",
 
-        "Knox": 'far fa-hdd',
-        "Knox.AuthToken": "fas fa-tag",
-
         "Sites": 'far fa-map',
         "Sites.Site": "fas fa-map",
 

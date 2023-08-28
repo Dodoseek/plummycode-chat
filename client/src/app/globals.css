@@ -3,55 +3,85 @@
 @tailwind utilities;
 
 
-.focus{
+.focus {
   @apply focus:outline-none focus:ring focus:outline-1 focus:outline-violet-500;
 }
 
-.nav-item{
+.nav-item {
   @apply h-full w-16 flex justify-center items-center rounded-t-full;
   min-height: 24px;
 }
 
-.nav-item-active{
-  @apply nav-item hover:bg-violet-600 bg-violet-700 ;
+/* // prettier-ignore */
+.nav-item-active {
+  @apply nav-item hover:bg-violet-600 bg-violet-700;
   min-height: 24px;
 }
 
-.nav-container{
+.nav-container {
   @apply flex pt-2 items-center h-full justify-around;
 }
 
-.height{
+.height {
   height: calc(100vh - 96px);
 }
 
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 3px;
 }
 
-::-webkit-scrollbar-track{
+::-webkit-scrollbar-track {
   @apply bg-inherit
 }
 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   @apply bg-violet-400 hover:bg-violet-500
 }
 
-::-webkit-scrollbar-button{
+::-webkit-scrollbar-button {
   display: none;
 }
 
-.icons{
+.icons {
   @apply flex w-full h-full justify-center items-center cursor-not-allowed opacity-50
 }
 
 @keyframes scale {
-  0% {transform: scale(0.97)}
-  50% {transform: scale(1)}
-  100% {transform: scale(0.97)}
+  0% {
+    transform: scale(0.97)
+  }
+
+  50% {
+    transform: scale(1)
+  }
+
+  100% {
+    transform: scale(0.97)
+  }
 }
 
-.skeleton-loading{
+.skeleton-loading {
   animation: scale 1.2s infinite ease-in;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #a3a3a3;
+}
+
+.separator:not(:empty)::before {
+  margin-right: 1.5em;
+}
+
+.separator:not(:empty)::after {
+  margin-left: 1.5em;
 }

@@ -60,8 +60,14 @@ INSTALLED_APPS = [
     'Chat.apps.ChatConfig',
     'FriendList.apps.FriendlistConfig',
     'rest_framework',
-    'djoser',
-    'knox',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
 ]
 
 SITE_ID = 1
@@ -73,9 +79,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-        'knox.auth.TokenAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -219,13 +224,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "User.User"
 
-CORS_ALLOWED_ORIGINS = [
-    os.getenv("CORS_ALLOWED_ORIGINS", 'http://127.0.0.1:3000'),
-]
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS"),
+CSRF_TRUSTED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS"),
 CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_TRUSTED_ORIGINS = [
-    os.getenv("CORS_ALLOWED_ORIGINS", 'http://127.0.0.1:3000'),
-]
+
 CORS_ALLOW_CREDENTIALS = True
 
 
@@ -266,13 +268,6 @@ SPECTACULAR_SETTINGS = {
         "syntaxHighlight.theme": "obsidian",
         "queryConfigEnabled": True,
         "pluginLoadType": "chain",
-        # "presets": ["SwaggerUI.presets.ApisPreset"],
-        # "maxDisplayedTags": 0,
-        # "urls": [
-        #     {"url": "http://127.0.0.1:8000/api/schema/", "name": "users"},
-        #     {"url": "http://127.0.0.1:8000/api/v1/chat/", "name": "chat"}
-        # ]
-
     },
     "COMPONENT_SPLIT_REQUEST": True,
     'SWAGGER_UI_DIST': "//unpkg.com/swagger-ui-dist@latest",  # shorthand to use the sidecar instead
@@ -280,79 +275,99 @@ SPECTACULAR_SETTINGS = {
     'PREPROCESSING_HOOKS': ["FriendList.excluded_path.custom_preprocessing_hook"]
 }
 
+REST_AUTH = {
+    'LOGIN_SERIALIZER': 'dj_rest_auth.serializers.LoginSerializer',
+    'TOKEN_SERIALIZER': 'dj_rest_auth.serializers.TokenSerializer',
+    'JWT_SERIALIZER': 'dj_rest_auth.serializers.JWTSerializer',
+    'JWT_SERIALIZER_WITH_EXPIRATION': 'dj_rest_auth.serializers.JWTSerializerWithExpiration',
+    'JWT_TOKEN_CLAIMS_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainPairSerializer',
+    'USER_DETAILS_SERIALIZER': 'User.serializers.UserSerializer',
+    'PASSWORD_RESET_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetSerializer',
+    'PASSWORD_RESET_CONFIRM_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetConfirmSerializer',
+    'PASSWORD_CHANGE_SERIALIZER': 'dj_rest_auth.serializers.PasswordChangeSerializer',
 
-DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'REGISTER_SERIALIZER': 'User.serializers.UserSerializer',
 
-    'SEND_ACTIVATION_EMAIL': True,
-    'SEND_CONFIRMATION_EMAIL': True,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'REGISTER_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
 
+    'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
+    'TOKEN_CREATOR': 'dj_rest_auth.utils.default_create_token',
+
+    'PASSWORD_RESET_USE_SITES_DOMAIN': False,
+    'OLD_PASSWORD_FIELD_ENABLED': False,
     'LOGOUT_ON_PASSWORD_CHANGE': True,
+    'SESSION_LOGIN': True,
+    "USE_JWT": True,
 
-    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [],
-
-    'HIDE_USERS': False,
-
-    'TOKEN_MODEL': 'knox.models.AuthToken',
-
-    'SERIALIZERS': {
-        'activation': 'djoser.serializers.ActivationSerializer',
-        'password_reset': 'djoser.serializers.SendEmailResetSerializer',
-        'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
-        'password_reset_confirm_retype': 'djoser.serializers.PasswordResetConfirmRetypeSerializer',
-        'set_password': 'djoser.serializers.SetPasswordSerializer',
-        'set_password_retype': 'djoser.serializers.SetPasswordRetypeSerializer',
-        'set_username': 'djoser.serializers.SetUsernameSerializer',
-        'set_username_retype': 'djoser.serializers.SetUsernameRetypeSerializer',
-        'username_reset': 'djoser.serializers.SendEmailResetSerializer',
-        'username_reset_confirm': 'djoser.serializers.UsernameResetConfirmSerializer',
-        'username_reset_confirm_retype': 'djoser.serializers.UsernameResetConfirmRetypeSerializer',
-        'user_create': 'User.serializers.UserSerializer',
-        'user_create_password_retype': 'djoser.serializers.UserCreatePasswordRetypeSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
-        'user': 'User.serializers.AllUsersSerializer',
-        'current_user': 'User.serializers.UserSerializer',
-        'token': 'djoser.serializers.TokenSerializer',
-        'token_create': 'djoser.serializers.TokenCreateSerializer',
-    },
-    'EMAIL': {
-        'activation': 'djoser.email.ActivationEmail',
-        'confirmation': 'djoser.email.ConfirmationEmail',
-        'password_reset': 'djoser.email.PasswordResetEmail',
-        'password_changed_confirmation': 'djoser.email.PasswordChangedConfirmationEmail',
-        'username_changed_confirmation': 'djoser.email.UsernameChangedConfirmationEmail',
-        'username_reset': 'djoser.email.UsernameResetEmail',
-    },
-    'CONSTANTS': {
-        'messages': 'djoser.constants.Messages',
-    },
-    'PERMISSIONS': {
-        'activation': ['rest_framework.permissions.AllowAny'],
-        'password_reset': ['rest_framework.permissions.AllowAny'],
-        'password_reset_confirm': ['rest_framework.permissions.AllowAny'],
-        'set_password': ['User.permissions.IsOwnerOrAdmin'],
-        'username_reset': ['rest_framework.permissions.AllowAny'],
-        'username_reset_confirm': ['rest_framework.permissions.AllowAny'],
-        'set_username': ['User.permissions.IsOwnerOrAdmin'],
-        'user_create': ['rest_framework.permissions.AllowAny'],
-        'user_delete': ['User.permissions.IsOwnerOrAdmin'],
-        'user': ['User.permissions.IsOwnerOrAdmin', 'rest_framework.permissions.IsAuthenticated'],
-        'user_list': ['User.permissions.IsOwnerOrAdmin'],
-        'token_create': ['rest_framework.permissions.AllowAny'],
-        'token_destroy': ['rest_framework.permissions.IsAuthenticated', 'User.permissions.IsOwnerOrAdmin'],
-    }
+    'JWT_AUTH_COOKIE': 'access',
+    'JWT_AUTH_REFRESH_COOKIE': 'refresh',
+    'JWT_AUTH_REFRESH_COOKIE_PATH': '/',
+    'JWT_AUTH_SECURE': False,
+    "JWT_AUTH_HTTPONLY": False,
+    'JWT_AUTH_SAMESITE': 'Lax',
+    'JWT_AUTH_RETURN_EXPIRATION': False,
+    'JWT_AUTH_COOKIE_USE_CSRF': False,
+    'JWT_AUTH_COOKIE_ENFORCE_CSRF_ON_UNAUTHENTICATED': False,
 }
 
-REST_KNOX = {
-    'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
-    'AUTH_TOKEN_CHARACTER_LENGTH': 64,
-    'TOKEN_TTL': timedelta(hours=10),
-    'USER_SERIALIZER': 'User.serializers.UserSerializer',
-    'TOKEN_LIMIT_PER_USER': None,
-    'AUTO_REFRESH': False,
-    # 'EXPIRY_DATETIME_FORMAT': api_settings.DATETME_FORMAT,
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(os.getenv('ACCESS_TOKEN_LIFETIME', '60'))),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(os.getenv('REFRESH_TOKEN_LIFETIME', '7'))),
+    "ROTATE_REFRESH_TOKENS": bool(os.getenv('REFRESH_TOKEN_LIFETIME', 'True')),
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": bool(os.getenv('UPDATE_LAST_LOGIN', 'True')),
+
+    "ALGORITHM": "HS512",
+    "SIGNING_KEY": os.getenv('SECRET_KEY'),
+    "VERIFYING_KEY": "",
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "JSON_ENCODER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
+
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "id",
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+
+    "JTI_CLAIM": "jti",
+
+    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=int(os.getenv('SLIDING_TOKEN_LIFETIME', '5'))),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=int(os.getenv('SLIDING_TOKEN_REFRESH_LIFETIME', '1'))),
+
+    "TOKEN_OBTAIN_SERIALIZER": "User.authentication.UserTokenObtainPairSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
+    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
+    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
+    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
+    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+}
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": os.getenv('GOOGLE_CLIENT_ID'),  # replace me
+            "secret": os.getenv('GOOGLE_CLIENT_SECRET'),        # replace me
+            "key": "",                               # leave empty
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "VERIFIED_EMAIL": True,
+    },
 }

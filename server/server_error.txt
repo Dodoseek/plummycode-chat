@@ -1,0 +1,8 @@
+строка:1 знак:14
++ poetry shell & python manage.py runserver
++              ~
+Амперсанд (&) не разрешен. Оператор & зарезервирован для будущих версий. Добавьте двойные кавычки до и после амперсанда
+ ("&"), чтобы передать его как строку.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : AmpersandNotAllowed
+ 

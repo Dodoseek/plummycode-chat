@@ -14,7 +14,7 @@ from .serializers import AllUsersSerializer, UserSerializer
 User = get_user_model()
 
 
-@extend_schema(tags=["User"])
+@extend_schema(tags=["users"])
 class UserView(RetrieveModelMixin, CreateModelMixin, GenericViewSet):
     """ 
     Takes the user *ID* and returns his 
@@ -55,7 +55,7 @@ class UserView(RetrieveModelMixin, CreateModelMixin, GenericViewSet):
         return User.objects.filter(id=self.request.user.id)
 
 
-@extend_schema(tags=["User"])
+@extend_schema(tags=["users"])
 class AllUsersView(ListModelMixin, GenericViewSet):
     """
     Accepts the number of pages 

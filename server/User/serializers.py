@@ -1,7 +1,8 @@
 """ Serializers for User App """
+from dj_rest_auth.app_settings import api_settings
 from django.contrib.auth import get_user_model
-from rest_framework.serializers import (CharField, DateTimeField, ImageField,
-                                        ListField, ModelSerializer, Serializer)
+from rest_framework.serializers import (CharField, ImageField, ModelSerializer,
+                                        Serializer, SerializerMethodField)
 
 User = get_user_model()
 
@@ -9,10 +10,7 @@ User = get_user_model()
 class UserSerializer(ModelSerializer):
     """ User's model Serializer """
     password = CharField(write_only=True)
-    pictures = ListField(child=ImageField(),
-                         allow_empty=True,
-                         read_only=True,
-                         )
+    image = ImageField(required=False)
 
     def create(self, validated_data: dict):
 
@@ -35,36 +33,15 @@ class UserSerializer(ModelSerializer):
                   "first_name",
                   "last_name",
                   "email",
-                  "pictures",
+                  "image",
                   "slug"
                   )
 
 
 class AllUsersSerializer(ModelSerializer):
     """ All Users model Serializer """
-    pictures = ListField(child=ImageField(),
-                         allow_empty=True,
-                         read_only=True,
-                         )
+    image = ImageField(required=False)
 
     class Meta:
         model = User
-        fields = ("id", "username", "first_name", "last_name", "pictures", "slug")
-
-
-class UserLoginSerializer(ModelSerializer):
-    """ User's model Serializer """
-    class Meta:
-        model = User
-        fields = (
-            "email",
-            "password",
-        )
-
-
-# pylint: disable=W0223
-class UserLoginResponseSerializer(Serializer):
-    """ Response's model Serializer """
-    expiry = DateTimeField()
-    token = CharField()
-    user = UserSerializer()
+        fields = ("id", "username", "email", "first_name", "last_name", "image", "slug")

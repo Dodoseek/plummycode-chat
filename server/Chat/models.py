@@ -8,7 +8,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-from sorl.thumbnail import ImageField, get_thumbnail
+from sorl.thumbnail import ImageField
 
 User = settings.AUTH_USER_MODEL
 
@@ -22,17 +22,17 @@ class Chat(models.Model):
     def __str__(self) -> str:
         return str(self.id)
 
-    @property
-    def pictures(self):
-        if self.image:
-            return [
-                get_thumbnail(self.image, '100x100', format="WEBP", quality=70),
-                get_thumbnail(self.image, '300x300', format="WEBP", quality=70),
-                get_thumbnail(self.image, '600x600', format="WEBP", quality=70),
-                get_thumbnail(self.image, '1000x1000', format="WEBP", quality=70),
-                get_thumbnail(self.image, "1200x1200", format="WEBP", quality=100),
-            ]
-        return None
+    # @property
+    # def pictures(self):
+    #     if self.image:
+    #         return [
+    #             get_thumbnail(self.image, '100x100', format="WEBP", quality=70),
+    #             get_thumbnail(self.image, '300x300', format="WEBP", quality=70),
+    #             get_thumbnail(self.image, '600x600', format="WEBP", quality=70),
+    #             get_thumbnail(self.image, '1000x1000', format="WEBP", quality=70),
+    #             get_thumbnail(self.image, "1200x1200", format="WEBP", quality=100),
+    #         ]
+    #     return None
 
     class Meta:
         verbose_name = _("Chat")
@@ -67,17 +67,17 @@ class ImagesOfMessage(models.Model):
 
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name=_("Message"))
 
-    @property
-    def pictures(self):
-        if self.image:
-            return [
-                get_thumbnail(self.image, '100x100', format="WEBP", quality=70),
-                get_thumbnail(self.image, '300x300', format="WEBP", quality=70),
-                get_thumbnail(self.image, '600x600', format="WEBP", quality=70),
-                get_thumbnail(self.image, '1000x1000', format="WEBP", quality=70),
-                get_thumbnail(self.image, "1200x1200", format="WEBP", quality=100),
-            ]
-        return None
+    # @property
+    # def pictures(self):
+    #     if self.image:
+    #         return [
+    #             get_thumbnail(self.image, '100x100', format="WEBP", quality=70),
+    #             get_thumbnail(self.image, '300x300', format="WEBP", quality=70),
+    #             get_thumbnail(self.image, '600x600', format="WEBP", quality=70),
+    #             get_thumbnail(self.image, '1000x1000', format="WEBP", quality=70),
+    #             get_thumbnail(self.image, "1200x1200", format="WEBP", quality=100),
+    #         ]
+    #     return None
 
     def __str__(self) -> str:
         return str(self.message.text)

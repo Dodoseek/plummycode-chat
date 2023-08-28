@@ -1,16 +1,11 @@
-'use client'
-import Header from "@/components/Header/Header";
-import "./globals.css";
 import type { Metadata } from "next";
 import { Inconsolata } from "next/font/google";
-import Navigation from "@/components/Navigation/Navigation";
-import { Provider } from "react-redux";
-import { store } from "../store/store";
 const Inconsol = Inconsolata({ subsets: ["latin"] });
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Plummy Chat",
-  description: "Online chat for friends",
+  description: "Online chat",
 };
 
 export default function RootLayout({
@@ -22,15 +17,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={Inconsol.className + "bg-no-repeat bg-violet-100 flex justify-center flex-row"}>
-          <Provider store={store}>
-        <div className="h-screen w-screen sm:max-w-screen-sm">
-            <Header/>
-            <div className="height">
-              {children}
-            </div>
-            <Navigation/>
-        </div>
-          </Provider> 
+        {children}
       </body>
     </html>
   );
