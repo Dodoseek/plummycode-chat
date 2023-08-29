@@ -16,7 +16,7 @@ export default function RootLayout({
 
   return (
     <html lang="ru">
-      <body className={Inconsol.className + "bg-no-repeat bg-violet-100 flex justify-center flex-row"}>
+      <body className={Inconsol.className + "bg-no-repeat cross-pattern bg-violet-100 flex justify-center flex-row"}>
         {children}
       </body>
     </html>

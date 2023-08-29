@@ -177,6 +177,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTHENTICATION_BACKENDS = [
+    "User.authentication.AllowAllUsersModelBackend",
+]
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -224,14 +228,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "User.User"
 
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS"),
-CSRF_TRUSTED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS"),
+
+CORS_ALLOWED_ORIGINS = [os.getenv("CORS_ALLOWED_ORIGINS"), os.getenv("CORS_ALLOWED_ORIGINS2")]  # , ],
+CSRF_TRUSTED_ORIGINS = [os.getenv("CORS_ALLOWED_ORIGINS"), os.getenv("CORS_ALLOWED_ORIGINS2")]  # , ],
 CSRF_COOKIE_NAME = 'csrftoken'
 
 CORS_ALLOW_CREDENTIALS = True
 
 
 JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS_SETTINGS
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 
 SPECTACULAR_SETTINGS = {
@@ -286,7 +292,8 @@ REST_AUTH = {
     'PASSWORD_RESET_CONFIRM_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetConfirmSerializer',
     'PASSWORD_CHANGE_SERIALIZER': 'dj_rest_auth.serializers.PasswordChangeSerializer',
 
-    'REGISTER_SERIALIZER': 'User.serializers.UserSerializer',
+    'REGISTER_SERIALIZER': 'User.serializers.RegisterUserSerializer',
+    # 'REGISTER_SERIALIZER': 'dj_rest_auth.registration.views.RegisterView',
 
     'REGISTER_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
 
@@ -350,7 +357,7 @@ SIMPLE_JWT = {
 }
 
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 

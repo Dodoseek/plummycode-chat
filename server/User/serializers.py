@@ -1,35 +1,20 @@
 """ Serializers for User App """
-from dj_rest_auth.app_settings import api_settings
+from dj_rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
-from rest_framework.serializers import (CharField, ImageField, ModelSerializer,
-                                        Serializer, SerializerMethodField)
+from django.utils.translation import gettext_lazy as _
+from rest_framework.serializers import CharField, ImageField, ModelSerializer
 
 User = get_user_model()
 
 
 class UserSerializer(ModelSerializer):
     """ User's model Serializer """
-    password = CharField(write_only=True)
     image = ImageField(required=False)
-
-    def create(self, validated_data: dict):
-
-        user = User.objects.create(
-            username=validated_data['username'],
-            first_name=validated_data.get('first_name'),
-            last_name=validated_data.get('last_name'),
-            email=validated_data['email'],
-        )
-
-        user.set_password(validated_data["password"])
-        user.save()
-        return user
 
     class Meta:
         model = User
         fields = ("id",
                   "username",
-                  "password",
                   "first_name",
                   "last_name",
                   "email",
@@ -45,3 +30,17 @@ class AllUsersSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "username", "email", "first_name", "last_name", "image", "slug")
+
+
+# pylint: disable=W0223
+class RegisterUserSerializer(RegisterSerializer):
+
+    """ User's model Register Serializer """
+    first_name = CharField()
+    last_name = CharField()
+
+    def get_cleaned_data(self):
+        data_dict = super().get_cleaned_data()
+        data_dict['first_name'] = self.validated_data.get('first_name', '')
+        data_dict['last_name'] = self.validated_data.get('last_name', '')
+        return data_dict

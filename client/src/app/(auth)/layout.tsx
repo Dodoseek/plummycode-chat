@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <>
       <ClientProvider>
-        <main className="flex h-screen flex-1 flex-col items-center justify-center px-6 py-12 lg:px-8">
+        <main className="flex h-full flex-1 flex-col items-center justify-center py-12 lg:px-8">
           {children}
         </main>
       </ClientProvider>

@@ -43,14 +43,12 @@ const SignIn: FC = () => {
             redirect: true,
             password: userData.password,
             email: userData.email
-        })
+        });
         setLoading(false);
         if (res && !res.error) {
-            console.log(res && !res.error);
             setSuccess(true);
             push('/chat');
         } else {
-            console.log(res && !res.error);
             enableButton()
             setError(true);
             console.log(res?.error);
@@ -59,7 +57,7 @@ const SignIn: FC = () => {
 
     return (
         <>
-            <main className="w-screen sm:max-w-xl px-20 bg-purple-200 rounded-none sm:rounded-xl shadow-sm drop-shadow-xl shadow-gray-500 py-20">
+            <main className="w-screen sm:max-w-xl px-4 sm:px-20 bg-purple-200 rounded-none sm:rounded-xl shadow-sm drop-shadow-xl shadow-gray-500 py-20">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <Image
                         className="mx-auto h-12 w-auto"
@@ -80,6 +78,7 @@ const SignIn: FC = () => {
                             </label>
                             <div className="mt-2">
                                 <input
+                                    placeholder='email'
                                     value={userData.email}
                                     onChange={e => setUserData({ ...userData, email: e.target.value })}
                                     id="email"
@@ -87,11 +86,7 @@ const SignIn: FC = () => {
                                     type="email"
                                     autoComplete="email"
                                     required
-                                    className="block w-full rounded-md border-0 py-1.5 
-                                    text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
-                                    placeholder:text-gray-400 focus:ring-2 focus:ring-inset
-                                    focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3 p-1
-                                    placeholder:text-sm font-semibold" />
+                                    className="auth-input" />
                             </div>
                         </div>
                         <div>
@@ -109,6 +104,7 @@ const SignIn: FC = () => {
                             </div>
                             <div className="mt-2">
                                 <input
+                                    placeholder='password'
                                     onChange={e => setUserData({ ...userData, password: e.target.value })}
                                     value={userData.password}
                                     id="password"
@@ -116,22 +112,14 @@ const SignIn: FC = () => {
                                     type="password"
                                     autoComplete="current-password"
                                     required
-                                    className="block w-full rounded-md border-0 py-1.5 
-                                    text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
-                                    placeholder:text-gray-400 focus:ring-2 focus:ring-inset
-                                    focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-3 p-1
-                                    placeholder:text-sm font-semibold" />
+                                    className="auth-input" />
                             </div>
                         </div>
                         <div>
                             <button
                                 ref={submitButton}
                                 type="submit"
-                                className="flex w-full justify-center rounded-md bg-indigo-600 
-                                px-3 py-1.5 text-sm font-semibold leading-6 text-white
-                                shadow-sm hover:bg-indigo-500 focus-visible:outline
-                                focus-visible:outline-2 focus-visible:outline-offset-2
-                                focus-visible:outline-indigo-600">
+                                className="form-button">
                                 {
                                     isLoading ? <div className='icons'><LoadingDefault width={'24'} /></div> :
                                         isSuccess ? <div className='icons'><SuccesDefault color='white' width={'30'} /></div> :
@@ -147,7 +135,7 @@ const SignIn: FC = () => {
             </main>
             <p className="mt-10 text-center text-sm text-gray-500">
                 Don't have an account?{' '}
-                <Link href="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                <Link href="/register" className="link">
                     Registration
                 </Link>
             </p>

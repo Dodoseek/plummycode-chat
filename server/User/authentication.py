@@ -1,6 +1,7 @@
 """ Simple JWT Authentication classes """
 # pylint: disable=W0223
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from allauth.account.auth_backends import AuthenticationBackend
 
 
 class UserTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -16,3 +17,9 @@ class UserTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['is_superuser'] = user.is_superuser
 
         return token
+
+
+class AllowAllUsersModelBackend(AuthenticationBackend):
+
+    def user_can_authenticate(self, user):
+        return True

@@ -2,7 +2,7 @@ import { fetchBaseQuery, retry, createApi } from '@reduxjs/toolkit/query/react'
 import { HYDRATE } from 'next-redux-wrapper'
 
 
-const API_URL = process.env.API_URL!
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 const MAX_RETRIES = parseInt(process.env.MAX_FETCH_RETRIES!)
 // Define a service using a base URL and expected endpoints
 

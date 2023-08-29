@@ -40,6 +40,7 @@ export const authConfug: AuthOptions = {
           });
 
           if (!response.ok) {
+            console.log('Sign In Authorize Error');
             throw new Error('Login request failed');
           }
 
@@ -47,7 +48,6 @@ export const authConfug: AuthOptions = {
           if (responseData) return responseData;
         } catch (error) {
           console.log('CREDENTIALS SIGNIN ERROR');
-          console.error(error);
         }
         return null;
       },
@@ -111,4 +111,5 @@ export const authConfug: AuthOptions = {
     signIn: '/login',
     signOut: '/login',
   },
+  // debug: process.env.NODE_ENV !== 'production',
 };
