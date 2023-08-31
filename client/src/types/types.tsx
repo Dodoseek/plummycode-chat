@@ -1,4 +1,4 @@
-interface User {
+export interface User {
     id: number,
     username: string,
     first_name: string | null,
@@ -8,41 +8,42 @@ interface User {
     slug: string
 };
 
-interface CreateUser extends Omit<User, "id" | "image" | "slug"> {
+export interface CreateUser extends Omit<User, "id" | "image" | "slug"> {
     password1: string,
     password2: string,
 };
 
-interface AllUsers {
+export interface AllUsers {
     count: number,
     next: string,
     previous: string,
     results: User[]
 };
 
-interface PropsUtilityData {
-    width?: string,
+export interface PropsUtilityData {
+    width?: number,
     color?: string
+    className?: string
 }
 
-type Links = {
+export type Links = {
     links: Link[]
 }
 
-type Link = {
+export type Link = {
     href: string,
     icon: React.ReactNode
 }
 
-type ResponseUser = {
+export type ResponseUser = {
     access: string,
     refresh: string,
     user: User
 }
 
-type SignInProvider = 'credentials' | 'google';
+export type SignInProvider = 'credentials' | 'google';
 
-interface GoogleResponse {
+export interface GoogleResponse {
     name?: string,
     email?: string,
     picture?: string,
@@ -57,7 +58,7 @@ interface GoogleResponse {
     jti?: string
 }
 
-interface GoogleSignInData {
+export interface GoogleSignInData {
     provider: 'google',
     type: 'oauth',
     providerAccountId: '117683573303464064792',
@@ -69,3 +70,4 @@ interface GoogleSignInData {
     id_token: 'eyJhbGciOiJSUzI1NiIsImtpZCI6ImM3ZTExNDEwNTlhMTliMjE4MjA5YmM1YWY3YTgxYTcyMGUzOWI1MDAiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2MTY3NjY0NzA2MjktNjFwZmRvaHBsa28wc3M5MW5xb2cwZnU4azR1azYyZzQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2MTY3NjY0NzA2MjktNjFwZmRvaHBsa28wc3M5MW5xb2cwZnU4azR1azYyZzQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTc2ODM1NzMzMDM0NjQwNjQ3OTIiLCJlbWFpbCI6ImFuZHJld3NpdGV3b3Jrc3BhY2VAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJSUkFWX0tmTkZPOUdmOXJ1ZUxpRzNnIiwibmFtZSI6ItCQ0L3QtNGA0LXQuSDQk9C70YPRiNC90LXQsiIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRmSGRlZVZHdkJ0OEpzUEhGelk1cFpRZ2ZyNjJnNWR2bEp2Wk55TUNQaHk9czk2LWMiLCJnaXZlbl9uYW1lIjoi0JDQvdC00YDQtdC5IiwiZmFtaWx5X25hbWUiOiLQk9C70YPRiNC90LXQsiIsImxvY2FsZSI6InJ1IiwiaWF0IjoxNjkzMjAxMTMwLCJleHAiOjE2OTMyMDQ3MzB9.W-r41ap-WRYl7OH4DcCkA35SkoKLT4DP6_-9aZIkqCibmNCriN4FYQqPY_3SD6-nqGk31iZNzsQ32h2tQi76TgQO5GISo4NhT_Nwmfjxbx4Et1894sNdao3kZ7CJUxaN32hm1xcZmhrN4dl2bwzc5mYpnGf6rnxPdvgfc2smc-9f50pcUwhxTdFZumB2zXAfxCpiAy6oglRtIx0uvWCt-ZbvNlXXhLrLUB1IsjG3_aMekwgFzvqNDuOeByLU3KOkoa2XZEONKyXElZpP8z2XM4NhzgSy_n7wWlDvEY79-Bp9S6UQ_RlVexJ9Yk7cq7Fg01bbDfFDdnHEgT9iMzo3Rg',
     meta: ResponseUser
 }
+

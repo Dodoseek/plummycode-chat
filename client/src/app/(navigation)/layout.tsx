@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/Headers";
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import ClientProvider from "@/components/ClientProvider";
@@ -16,13 +16,9 @@ export default function RootLayout({
 
   return (
     <ClientProvider>
-      <div className=" w-screen h-screen sm:max-w-screen-sm">
-        <Header />
-        <div className="height">
-          {children}
-        </div>
-        <Footer />
-      </div>
+      <Header />
+      {children}
+      <Footer />
     </ClientProvider>
   );
 }

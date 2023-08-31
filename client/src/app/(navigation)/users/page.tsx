@@ -1,6 +1,8 @@
 import { NextPage } from 'next'
 import { UserPanel } from '@/components/UserPanels'
 import { getUsers } from '@/services/UserActions';
+import { AllUsers } from '@/types/types';
+
 
 
 const UsersPage: NextPage = async () => {

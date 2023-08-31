@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { Inconsolata } from "next/font/google";
-const Inconsol = Inconsolata({ subsets: ["latin"] });
 import "./globals.css";
 
+export const Inconsol = Inconsolata({
+  subsets: ["latin"],
+  variable: '--font-inconsolata',
+});
 export const metadata: Metadata = {
-  title: "Plummy Chat",
-  description: "Online chat",
+  title: "Plummy Sign In",
+  description: "Sign In Plummy",
 };
 
 export default function RootLayout({
@@ -16,8 +19,10 @@ export default function RootLayout({
 
   return (
     <html lang="ru">
-      <body className={Inconsol.className + "bg-no-repeat cross-pattern bg-violet-100 flex justify-center flex-row"}>
-        {children}
+      <body className={`${Inconsol.variable} font-sans h-screen cross-pattern flex justify-center`}>
+        <main className="w-screen sm:max-w-screen-sm flex flex-col h-screen">
+          {children}
+        </main>
       </body>
     </html>
   );

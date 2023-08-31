@@ -1,10 +1,10 @@
-'use client';
+import { PropsUtilityData } from '@/types/types';
 import { FC } from 'react'
 
-const UserSearch: FC = () => {
+const UserSearch: FC<PropsUtilityData> = async ({ className }) => {
 
     return (
-        <div className="flex h-8 w-full mb-5 justify-center border-violet-600 rounded-lg border-2">
+        <div className={className + "flex h-8 w-full mb-5 justify-center border-violet-600 rounded-lg border-2"} >
             <input
                 type="text"
                 className="pl-3 focus border-r-gray-300 border-r-2 rounded-l-md text-gray-500 w-full"

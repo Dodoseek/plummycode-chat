@@ -1,5 +1,7 @@
-import { FC, ReactNode, PropsWithChildren } from 'react'
-
+'use client';
+import { PropsUtilityData } from '@/types/types';
+import { usePathname, useRouter } from 'next/navigation';
+import { FC } from 'react'
 
 export const LoadingDefault: FC<PropsUtilityData> = ({ width = 10, color = 'violet' }) => {
   return (
@@ -38,27 +40,40 @@ export const LoadingHeader: FC = () => {
 };
 
 
-interface DetailNavigationProps {
-  children: ReactNode;
-  title: string;
-};
+export const TitleNavigation: FC = () => {
 
 
-export const TitleNavigation: FC<DetailNavigationProps> = ({ children, title }) => {
+  function modifyString(inputString: string) {
+    if (inputString.length < 2) {
+      return null;
+    }
+    const secondChar = inputString[1].toUpperCase();
+    const modifiedString = secondChar + inputString.slice(2);
+    return modifiedString;
+  }
+
   return (
-    <article className='flex px-1 flex-col items-center w-full  h-full bg-violet-200 border-r-gray-300 border-r'>
-      <h1 className='h-10 font-bold items-center pl-4 py-4 mb-6 text-gray-600 w-full text-2xl '>{title}</h1>
-      {children}
-    </article>
+    <h1 className='font-bold font-inco text-gray-600 w-full text-2xl'>{modifyString(usePathname()!)}</h1>
   );
 };
 
 
+export const BackButton: FC<PropsUtilityData> = ({ color, width, className }) => {
 
-export const Scrollbar: FC<PropsWithChildren<unknown>> = ({ children }) => {
+  const router = useRouter()
+
   return (
-    <div className="overflow-y-scroll w-full rounded-lg">
-      {children}
-    </div>
-  );
-};
+    <button onClick={() => { router.back() }}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none" viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke={color}
+        width={width}
+        height={width}
+        className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </button>
+  )
+}

@@ -9,7 +9,7 @@ interface UserForPanel {
     slug: string,
 }
 
-export const UserPanel: React.ComponentType<PropsWithChildren<UserForPanel>> = ({ username, image, slug }) => {
+export const UserPanel: React.ComponentType<PropsWithChildren<UserForPanel>> = async ({ username, image, slug }) => {
 
     return (
         <div className="flex mb-2 pr-1 w-full">
@@ -43,7 +43,7 @@ interface User {
     image: string
 }
 
-export const ChatUserPanel: React.ComponentType<PropsWithChildren<User>> = ({ name, date, message, image }) => {
+export const ChatUserPanel: React.ComponentType<PropsWithChildren<User>> = async ({ name, date, message, image }) => {
     return (
         <Link href='#' className="flex mb-2 pr-1 w-full">
             <div className="w-full h-20 flex bg-purple-100 hover:bg-purple-50 rounded-md">

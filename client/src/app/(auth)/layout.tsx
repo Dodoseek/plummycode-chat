@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
 import ClientProvider from "@/components/ClientProvider";
+import { authConfug } from "@/configs/auth";
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Plummy Chat",
   description: "Online chat",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
+  const session = await getServerSession(authConfug)
+
+  if (session) {
+    redirect(process.env.NEXT_PUBLIC_LOGIN_URL!)
+  }
 
   return (
     <>

@@ -27,7 +27,7 @@ export const SignIn: FC = () => {
 
 
 export const SignOut: FC = () => {
-    return <Link href="#" onClick={() => signOut({ callbackUrl: '/chat', })}>Sign Out</Link>
+    return <Link className='plummy-button w-36' href="#" onClick={() => signOut({ callbackUrl: '/chat', })}>Sign Out</Link>
 }
 
 interface ButtonAction {

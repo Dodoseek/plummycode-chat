@@ -3,6 +3,7 @@ import GooggleProvider from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { SIGN_IN_HANDLERS } from './handlers';
 import { refreshCredentialsAccessToken, refreshGoogleAccessToken } from './refreshToken';
+import { SignInProvider } from '@/types/types';
 
 export const getCurrentEpochTime = () => {
   return Math.floor(new Date().getTime() / 1000);
@@ -111,5 +112,4 @@ export const authConfug: AuthOptions = {
     signIn: '/login',
     signOut: '/login',
   },
-  // debug: process.env.NODE_ENV !== 'production',
 };

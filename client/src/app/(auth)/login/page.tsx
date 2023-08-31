@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ErrorDefault, LoadingDefault, SuccesDefault } from '@/components/Utility';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import React from 'react';
 
 const SignIn: FC = () => {
 
@@ -119,7 +120,7 @@ const SignIn: FC = () => {
                             <button
                                 ref={submitButton}
                                 type="submit"
-                                className="form-button">
+                                className="plummy-button w-full">
                                 {
                                     isLoading ? <div className='icons'><LoadingDefault width={'24'} /></div> :
                                         isSuccess ? <div className='icons'><SuccesDefault color='white' width={'30'} /></div> :

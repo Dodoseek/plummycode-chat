@@ -12,6 +12,7 @@ import { useCreateUserMutation } from '@/store/recipes/recipe.user';
 
 const SignIn: FC = () => {
 
+
     const searchParams = useSearchParams()!;
     const callbackUrl = searchParams.get('callbackUrl') || '/chat';
 
@@ -168,7 +169,7 @@ const SignIn: FC = () => {
                             <button
                                 ref={submitButton}
                                 type="submit"
-                                className="form-button"
+                                className="plummy-button w-full"
                                 disabled={disabledButton}>
                                 {
                                     isLoading ? <div className='icons'><LoadingDefault width={'24'} /></div> :
