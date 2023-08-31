@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { PropsWithChildren } from 'react'
+import { FC } from 'react'
 import Image from 'next/image'
+import { Chat } from '@/types/chat';
 
 
 interface UserForPanel {
@@ -9,7 +10,7 @@ interface UserForPanel {
     slug: string,
 }
 
-export const UserPanel: React.ComponentType<PropsWithChildren<UserForPanel>> = async ({ username, image, slug }) => {
+export const UserPanel: FC<UserForPanel> = async ({ username, image, slug }) => {
 
     return (
         <div className="flex mb-2 pr-1 w-full">
@@ -19,7 +20,7 @@ export const UserPanel: React.ComponentType<PropsWithChildren<UserForPanel>> = a
                 </Link>
                 <div className="flex flex-col justify-center pr-5 w-full">
                     <div className="flex justify-between items-center overflow-hidden ml-5">
-                        <Link href={`/user/${slug}`} >
+                        <Link href={`/${slug}`} >
                             <h4 className='font-bold hover:text-gray-900 sm:w-auto w-36 whitespace-nowrap overflow-hidden text-ellipsis'>{username}</h4>
                         </Link>
                         <Link href="#" className="bg-violet-600 hover:bg-violet-500 h-8 w-10 flex justify-center items-center rounded-md">
@@ -36,25 +37,22 @@ export const UserPanel: React.ComponentType<PropsWithChildren<UserForPanel>> = a
     );
 }
 
-interface User {
-    name?: string,
-    date: Date | string,
-    message?: string,
-    image: string
-}
 
-export const ChatUserPanel: React.ComponentType<PropsWithChildren<User>> = async ({ name, date, message, image }) => {
+export const ChatPanel: FC<Omit<Chat, 'id' | 'users'>> = async ({ name, last_message, image }) => {
+    const checkNumber = (string: string): string =>
+        string.length === 1 ? '0' + string : string;
+
     return (
         <Link href='#' className="flex mb-2 pr-1 w-full">
             <div className="w-full h-20 flex bg-purple-100 hover:bg-purple-50 rounded-md">
-                <Image alt='John' className='h-16 self-center w-16 ml-1 rounded-full' width={50} height={50} src={image} />
+                <Image alt={name} className='h-16 self-center w-16 ml-1 rounded-full' width={50} height={50} src={image} />
                 <div className="flex flex-col justify-center pr-5 w-full">
                     <div className="flex justify-between items-center overflow-hidden ml-3">
                         <h4 className='font-bold'>{name}</h4>
-                        <time className='text-sm'>{date.toLocaleString()}</time>
+                        <time className='text-sm'>{last_message.date ? checkNumber(last_message.date.toLocaleString()) : "Now"}</time>
                     </div>
                     <div className="flex">
-                        <h3 className='ml-3 mt-2'>{message}</h3>
+                        <h3 className='ml-3 mt-2'>{last_message.text ?? "Write the first message!"}</h3>
                     </div>
                 </div>
             </div>

@@ -25,3 +25,4 @@ export async function createUser(credentials: UserCredentials) {
     });
     return response.json()
 }
+

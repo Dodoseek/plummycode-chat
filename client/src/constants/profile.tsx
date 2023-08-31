@@ -1,4 +1,5 @@
 import { authConfug } from "@/configs/auth"
+import { Names, ProfileList } from "@/types/types"
 import { getServerSession } from "next-auth/next"
 
 export const COLOR = '#a78bfa'
@@ -24,8 +25,8 @@ function generateListFromObject(obj: any): Array<{ title: string, value: any }> 
 export const userInformation = async () => {
     const session = await getServerSession(authConfug)
     const userInfo = {
-        name: "Profile Information",
+        name: Names.profile,
         list: generateListFromObject(session!.user)
     }
-    return userInfo
+    return userInfo as ProfileList
 }

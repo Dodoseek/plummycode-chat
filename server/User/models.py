@@ -43,18 +43,6 @@ class User(AbstractUser):
     def __str__(self) -> str:
         return str(self.username)
 
-    # @property
-    # def pictures(self):
-    #     if self.image:
-    #         return [
-    #             get_thumbnail(self.image, '100x100', format="WEBP", quality=70),
-    #             get_thumbnail(self.image, '300x300', format="WEBP", quality=70),
-    #             get_thumbnail(self.image, '600x600', format="WEBP", quality=70),
-    #             get_thumbnail(self.image, '1000x1000', format="WEBP", quality=70),
-    #             get_thumbnail(self.image, "1200x1200", format="WEBP", quality=70),
-    #         ]
-    #     return None
-
     class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")

@@ -98,6 +98,7 @@ export const authConfug: AuthOptions = {
       if (token) {
         session.user = token.user;
         session.error = token.error;
+        session.access_token = token.access_token;
       }
 
       return session;

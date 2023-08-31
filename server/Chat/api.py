@@ -3,11 +3,13 @@
 from django.http import HttpRequest
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
+from rest_framework.authentication import TokenAuthentication
 # status
 from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework.response import Response
 # from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Chat, Message
 from .permissions import ItHasFriends, UsersListNotEmpty
@@ -31,6 +33,7 @@ class ChatView(CreateModelMixin, ListModelMixin, GenericViewSet):
         UsersListNotEmpty,
         ItHasFriends,
     ]
+
     serializer_class = ChatSerializer
 
     @extend_schema(
@@ -56,6 +59,7 @@ class ChatView(CreateModelMixin, ListModelMixin, GenericViewSet):
         summary='Get a list of my chats'
     )
     def list(self, request, *args, **kwargs):
+        # print(request)
         return super().list(request, *args, **kwargs)
 
     def get_serializer_class(self, *args, **kwargs):

@@ -1,9 +1,10 @@
 """ Serializers for Chat App """
-from rest_framework.serializers import ImageField, ModelSerializer
+from rest_framework.serializers import (DateTimeField, ImageField,
+                                        ModelSerializer)
 # pylint: disable=E0401
 from User.serializers import AllUsersSerializer
 
-from .models import Chat
+from .models import Chat, Message
 
 
 class ChatSerializer(ModelSerializer):
@@ -16,12 +17,22 @@ class ChatSerializer(ModelSerializer):
         fields = ("id", "users", "image")
 
 
+class MessageSerialiser(ModelSerializer):
+    """ Message's model Serializer """
+    date = DateTimeField(format="%Y.%m.%d %H:%M")
+
+    class Meta:
+        model = Message
+        fields = ("user", "text", "date", "type_of")
+
+
 class MyChatsSerializer(ModelSerializer):
     """ Chat's model Serializer """
     users = AllUsersSerializer(many=True)
     image = ImageField()
+    last_message = MessageSerialiser()
 
     class Meta:
         """ Meta class """
         model = Chat
-        fields = ("id", "image", "users")
+        fields = ("id", "image", "name", "last_message", "users")

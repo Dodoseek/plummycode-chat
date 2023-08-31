@@ -1,37 +1,23 @@
-import { NextPage } from 'next'
-import { ChatUserPanel } from '@/components/UserPanels';
+import { ChatPanel } from '@/components/UserPanels';
+import { IsEmpty } from '@/components/Utility';
+import { authConfug } from '@/configs/auth';
+import { getMyChats } from '@/services/ChatActions';
+import { MyChatsList } from '@/types/chat';
+import { getServerSession } from 'next-auth';
+import { FC } from 'react';
 
-const ChatPage: NextPage = () => {
+const ChatPage: FC = async () => {
 
-  const getTime = (): string => {
-    const date = new Date()
-    const hour = checkNumber(date.getHours().toString())
-    const minutes = checkNumber(date.getMinutes().toString())
-    return `${hour}:${minutes}`
-  };
-
-
-  const checkNumber = (string: string): string =>
-    string.length === 1 ? '0' + string : string;
+  const session = await getServerSession(authConfug)
+  const data = await getMyChats(session?.access_token!) as MyChatsList
+  // console.log(data)
 
   return (
     <>
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-      <ChatUserPanel name='Jonh Doe' message='Message...' date={getTime()} image='/im.webp' />
-
+      {data.results.length > 0 ? data.results.map(({ image, id, name, last_message }) => {
+        return <ChatPanel key={id} image={image} name={name} last_message={last_message} />
+      }) :
+        <IsEmpty text='The chat list is empty' buttonToUsers={true} />}
     </>
   )
 }

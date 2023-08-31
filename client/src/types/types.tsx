@@ -71,3 +71,18 @@ export interface GoogleSignInData {
     meta: ResponseUser
 }
 
+export enum Names {
+    profile = "Profile Information",
+    friends = "Friends",
+}
+
+export interface ProfileInfo {
+    value: string
+    title: string,
+
+}
+
+export interface ProfileList {
+    name: Names,
+    list: ProfileInfo[] | User[]
+}

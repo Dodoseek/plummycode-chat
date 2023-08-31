@@ -9,6 +9,7 @@ declare module 'next-auth' {
   interface Session {
     user: CustomUser;
     error?: string;
+    access_token : string;
   }
 
   interface Account {

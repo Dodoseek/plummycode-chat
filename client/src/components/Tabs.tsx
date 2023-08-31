@@ -1,21 +1,13 @@
 'use client';
+import { ProfileInfo, ProfileList, User } from '@/types/types';
 import { Tab } from '@headlessui/react'
+import { Names } from '@/types/types'
+import Link from 'next/link';
+import Image from 'next/image';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
-
-interface ProfileInfo {
-  value: string
-  title: string,
-
-}
-
-interface ProfileList {
-  name: string,
-  list: ProfileInfo[]
-}
-
 
 export const Tabs = ({ profile }: { profile: ProfileList[] }) => {
 
@@ -50,7 +42,7 @@ export const Tabs = ({ profile }: { profile: ProfileList[] }) => {
               )}
             >
               <ul>
-                {list?.map(({ value, title }) => (
+                {name === Names.profile ? (list as ProfileInfo[]).map(({ value, title }) => (
                   <li
                     key={value}
                     className="relative rounded-md p-3 hover:bg-gray-100"
@@ -63,7 +55,37 @@ export const Tabs = ({ profile }: { profile: ProfileList[] }) => {
                       <li>{title}</li>
                     </ul>
                   </li>
-                ))}
+                )) :
+                  (list as User[]).map(({ username, first_name, last_name, image, id, slug }) => (
+                    <li
+                      key={id}
+                      className="relative rounded-md p-3 flex items-center justify-between hover:bg-gray-100"
+                    >
+
+                      <div className='bg-violet-400 p-px rounded-full'>
+                        <Image src={image} width={50} height={50} alt={first_name && last_name
+                          ? `${first_name} ${last_name}`
+                          : username} className='h-10 w-10 rounded-full' />
+                      </div>
+                      <h3 className="text-sm font-medium leading-5">
+                        {first_name && last_name
+                          ? `${first_name} ${last_name}`
+                          : username}
+                      </h3>
+
+                      {/* <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
+                        <li>{username}</li>
+                      </ul> */}
+
+                      <Link
+                        href={slug}
+                        className={classNames(
+                          'absolute inset-0 rounded-md',
+                          'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
+                        )}
+                      />
+                    </li>
+                  ))}
               </ul>
             </Tab.Panel>
           ))}

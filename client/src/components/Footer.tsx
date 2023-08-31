@@ -10,10 +10,10 @@ const Footer: FC = async () => {
 
     const session = await getServerSession(authConfug);
     session && !LINKS.some((obj) => {
-        return obj.href === "/profile"
+        return obj.href === "/" + session.user.slug
     }) ?
         LINKS.push({
-            href: "/profile",
+            href: "/" + session.user.slug,
             icon: <div className='p-px bg-violet-200 rounded-full'><Image className=' border-violet-500 border rounded-full' width={25} height={25} src={session.user.image!}
                 alt={session.user.name ? session.user.name : 'user'} priority /></div>
         }) : null

@@ -1,3 +1,4 @@
+import { CreateUser, User } from "@/types/types";
 import { api } from "./api";
 
 export const userApi = api.injectEndpoints({
