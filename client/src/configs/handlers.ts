@@ -1,6 +1,7 @@
 import { AdapterUser } from 'next-auth/adapters';
 import { CredentialInput } from 'next-auth/providers/credentials';
 import type { Account, Profile } from 'next-auth';
+import { SignInProvider, User } from '@/types/users';
 
 export const SIGN_IN_HANDLERS: Record<SignInProvider, Function> = {
   credentials: async (

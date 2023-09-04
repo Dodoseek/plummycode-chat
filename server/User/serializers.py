@@ -2,7 +2,8 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-from rest_framework.serializers import CharField, ImageField, ModelSerializer
+from rest_framework.serializers import (CharField, ImageField, ModelSerializer,
+                                        SerializerMethodField)
 
 User = get_user_model()
 
@@ -10,11 +11,13 @@ User = get_user_model()
 class UserSerializer(ModelSerializer):
     """ User's model Serializer """
     image = ImageField(required=False)
+    full_name = SerializerMethodField()
 
     class Meta:
         model = User
         fields = ("id",
                   "username",
+                  'full_name',
                   "first_name",
                   "last_name",
                   "email",
@@ -22,14 +25,21 @@ class UserSerializer(ModelSerializer):
                   "slug"
                   )
 
+    def get_full_name(self, obj):
+        return f'{obj.first_name} {obj.last_name}' if obj.first_name and obj.last_name else obj.username
+
 
 class AllUsersSerializer(ModelSerializer):
     """ All Users model Serializer """
     image = ImageField(required=False)
+    full_name = SerializerMethodField()
+
+    def get_full_name(self, obj):
+        return f'{obj.first_name} {obj.last_name}' if obj.first_name and obj.last_name else obj.username
 
     class Meta:
         model = User
-        fields = ("id", "username", "email", "first_name", "last_name", "image", "slug")
+        fields = ("id", "username", 'full_name', "first_name", "last_name", "image", "slug")
 
 
 # pylint: disable=W0223

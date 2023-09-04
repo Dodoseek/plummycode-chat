@@ -39,6 +39,8 @@ class User(AbstractUser):
 
     first_name = models.CharField(_("first name"), max_length=150, blank=True, null=True)
     last_name = models.CharField(_("last name"), max_length=150, blank=True, null=True)
+    dob = models.DateField(null=True, blank=True, verbose_name=_('Birthday'))
+    is_private = models.BooleanField(default=False, verbose_name=_('Private profile'))
 
     def __str__(self) -> str:
         return str(self.username)

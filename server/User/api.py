@@ -56,7 +56,7 @@ class UserView(RetrieveModelMixin, CreateModelMixin, GenericViewSet):
 
 
 @extend_schema(tags=["users"])
-class AllUsersView(ListModelMixin, GenericViewSet):
+class AllUsersView(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     """
     Accepts the number of pages 
     and filters and returns a list 
@@ -64,12 +64,12 @@ class AllUsersView(ListModelMixin, GenericViewSet):
     *id* *first name* *last name*
 
     """
-
     serializer_class = AllUsersSerializer
     permission_classes = [
         permissions.AllowAny
     ]
     filter_backends = [DjangoFilterBackend]
+    lookup_field = 'slug'
 
     @extend_schema(
         description="Takes the number of pages and filters and returns a list"

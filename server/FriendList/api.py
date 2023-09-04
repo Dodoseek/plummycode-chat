@@ -2,6 +2,7 @@
 # pylint: disable=E0401
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import (OpenApiParameter, OpenApiResponse,
                                    extend_schema)
@@ -16,8 +17,7 @@ from .models import FriendList, FriendRequest
 from .permissions import (NotInFriendList, RequestDoesNotExist,
                           SenderIsNotReceiver)
 from .serializers import (AcceptRequestSerializer, FriendListSerializer,
-                          ReceiverRequestSerializer, RequestSerializer,
-                          SenderRequestSerializer)
+                          RequestSerializer)
 
 
 @extend_schema(tags=["Fiend List"])
@@ -108,15 +108,18 @@ class RequestViewSet(CreateModelMixin,
     ]
 
     @extend_schema(
-        description="Takes the required parameter *receiver*"
+        description="Takes the required parameter *purpose*"
         "in the body of the POST request and returns the object of the created request",
         summary='Create a request to add to friends list',
     )
-    def create(self, request, *args, **kwargs):
+    def create(self, request: HttpRequest, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         sender = get_object_or_404(get_user_model(), pk=request.user.id)
+        receiver = get_object_or_404(get_user_model(), pk=request.data['user'])
         serializer.is_valid(raise_exception=True)
         serializer.validated_data['sender'] = sender
+        serializer.validated_data['receiver'] = receiver
+        del serializer.validated_data['user']
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -150,7 +153,7 @@ class RequestViewSet(CreateModelMixin,
         if method in ("DELETE", "POST"):
             return self.serializer_class
         if method in ("GET",):
-            return SenderRequestSerializer
+            return RequestSerializer
         return self.serializer_class
 
     def get_queryset(self):
@@ -208,7 +211,7 @@ class ReceiverRequestViewSet(ListModelMixin, GenericViewSet):
 
     """
 
-    serializer_class = ReceiverRequestSerializer
+    serializer_class = RequestSerializer
     lookup_field = "receiver"
     permission_classes = [
         permissions.IsAuthenticated,

@@ -1,6 +1,6 @@
 import NextAuth, { DefaultSession, User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
-import { User as CustomUser } from '@/types/types';
+import { User as CustomUser } from '@/types/users';
 
 declare module 'next-auth' {
   /**
@@ -9,7 +9,7 @@ declare module 'next-auth' {
   interface Session {
     user: CustomUser;
     error?: string;
-    access_token : string;
+    access_token: string;
   }
 
   interface Account {

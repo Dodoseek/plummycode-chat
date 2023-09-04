@@ -1,5 +1,4 @@
 'use client';
-import { PropsUtilityData } from '@/types/types';
 import { usePathname, useRouter } from 'next/navigation';
 import { FC } from 'react'
 
@@ -25,12 +24,50 @@ export const ErrorDefault: FC<PropsUtilityData> = ({ width = 30, color = 'white'
 
 export const SuccesDefault: FC<PropsUtilityData> = ({ width, color = 'white' }) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={color} className="w-6 h-6"
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke={color}
+      className="w-6 h-6"
       width={width} height={width}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   )
 };
+
+export const AddDefault: FC<PropsUtilityData> = ({ width, color = 'white' }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke={color}
+      className="w-6 h-6"
+      width={width} height={width}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+
+  )
+};
+
+export const CloseDefault: FC<PropsUtilityData> = ({ width, color = 'white' }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke={color}
+      className="w-6 h-6"
+      width={width} height={width}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  )
+}
+
 
 export const LoadingHeader: FC = () => {
   return (
@@ -53,7 +90,7 @@ export const TitleNavigation: FC = () => {
   }
 
   return (
-    <h1 className='font-bold font-inco text-gray-600 w-full text-2xl'>{modifyString(usePathname()!)}</h1>
+    <h1 className='font-bold font-inco text-gray-600 w-auto text-2xl'>{modifyString(usePathname()!)}</h1>
   );
 };
 
@@ -99,5 +136,3 @@ export const IsEmpty: FC<emptyData> = ({ buttonToUsers, text }) => {
     </>
   )
 };
-
-

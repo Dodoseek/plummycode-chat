@@ -19,7 +19,7 @@ class ChatSerializer(ModelSerializer):
 
 class MessageSerialiser(ModelSerializer):
     """ Message's model Serializer """
-    date = DateTimeField(format="%Y.%m.%d %H:%M")
+    date = DateTimeField(format="%Y.%m.%d %H:%M", read_only=True)
 
     class Meta:
         model = Message

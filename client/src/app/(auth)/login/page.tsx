@@ -122,9 +122,9 @@ const SignIn: FC = () => {
                                 type="submit"
                                 className="plummy-button w-full">
                                 {
-                                    isLoading ? <div className='icons'><LoadingDefault width={'24'} /></div> :
-                                        isSuccess ? <div className='icons'><SuccesDefault color='white' width={'30'} /></div> :
-                                            isError ? <div className='icons'><ErrorDefault width={'30'} color='white' /></div> : 'Sign in'}
+                                    isLoading ? <div className='icons'><LoadingDefault width={24} /></div> :
+                                        isSuccess ? <div className='icons'><SuccesDefault color='white' width={30} /></div> :
+                                            isError ? <div className='icons'><ErrorDefault width={30} color='white' /></div> : 'Sign in'}
                             </button>
                         </div>
                     </form>

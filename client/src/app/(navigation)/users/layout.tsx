@@ -8,7 +8,7 @@ export default function UsersLayout({
 
   return (
     <>
-      <div className='scroll my-1'>
+      <div className='scroll my-1 relative'>
         {children}
       </div>
     </>

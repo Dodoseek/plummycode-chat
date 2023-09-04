@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { ErrorDefault, LoadingDefault, SuccesDefault } from '@/components/Utility';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-import { useCreateUserMutation } from '@/store/recipes/recipe.user';
+import { useCreateUserMutation } from '@/store/recipes/user.recipe';
 
 
 const SignIn: FC = () => {
@@ -172,9 +172,9 @@ const SignIn: FC = () => {
                                 className="plummy-button w-full"
                                 disabled={disabledButton}>
                                 {
-                                    isLoading ? <div className='icons'><LoadingDefault width={'24'} /></div> :
-                                        isSuccess ? <div className='icons'><SuccesDefault color='white' width={'30'} /></div> :
-                                            isError ? <div className='icons'><ErrorDefault width={'30'} color='white' /></div> : 'Register'}
+                                    isLoading ? <div className='icons'><LoadingDefault width={24} /></div> :
+                                        isSuccess ? <div className='icons'><SuccesDefault color='white' width={30} /></div> :
+                                            isError ? <div className='icons'><ErrorDefault width={30} color='white' /></div> : 'Register'}
                             </button>
                         </div>
                     </form>

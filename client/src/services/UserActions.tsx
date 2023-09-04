@@ -1,6 +1,6 @@
 export async function getUsers() {
     const API_URL = process.env.API_URL!
-    const response = await fetch(API_URL + 'users/', {
+    const response = await fetch(API_URL + 'users/get', {
         next: {
             revalidate: 60
         }
@@ -9,20 +9,13 @@ export async function getUsers() {
     return response.json()
 };
 
-interface UserCredentials {
-    username: string,
-    first_name: string,
-    last_name: string,
-    email: string,
-    password: string
-};
-
-export async function createUser(credentials: UserCredentials) {
+export async function getUserBySlug(slug: string) {
     const API_URL = process.env.API_URL!
-    const response = await fetch(API_URL + 'users/account/register/', {
-        method: "POST",
-        body: JSON.stringify(credentials)
+    const response = await fetch(API_URL + `users/get/${slug}`, {
+        next: {
+            revalidate: 60
+        }
     });
-    return response.json()
-}
 
+    return response.json()
+};

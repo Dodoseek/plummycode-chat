@@ -20,12 +20,16 @@ Including another URLconf
 from dj_rest_auth.jwt_auth import get_refresh_view
 from dj_rest_auth.registration.views import RegisterView
 from dj_rest_auth.views import LoginView, LogoutView, UserDetailsView
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 from rest_framework_simplejwt.views import TokenVerifyView
 
 from .api import AllUsersView
 # pylint: disable=E0401
 from .views import GoogleConnect, GoogleLogin
+
+router = routers.SimpleRouter()
+router.register(r'get', AllUsersView, basename='users')
 
 app_name = "user"
 
@@ -42,7 +46,7 @@ urlpatterns = [
     path('token/refresh/', get_refresh_view().as_view(), name='token_refresh'),
 
     # USER'S ACTIONS
-    path('', AllUsersView.as_view({'get': 'list'}), name='all_users'),
+    path('', include((router.urls, 'all_users'))),
 
     # SOCIAL AUTH
     path("google/", GoogleLogin.as_view(), name="google_login"),

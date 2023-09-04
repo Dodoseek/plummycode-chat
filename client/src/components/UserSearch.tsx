@@ -1,4 +1,4 @@
-import { PropsUtilityData } from '@/types/types';
+import { PropsUtilityData } from '@/types/users';
 import { FC } from 'react'
 
 const UserSearch: FC<PropsUtilityData> = async ({ className }) => {

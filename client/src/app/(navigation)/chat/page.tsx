@@ -1,4 +1,4 @@
-import { ChatPanel } from '@/components/UserPanels';
+import { ChatPanel } from '@/components/Panels';
 import { IsEmpty } from '@/components/Utility';
 import { authConfug } from '@/configs/auth';
 import { getMyChats } from '@/services/ChatActions';
@@ -10,7 +10,6 @@ const ChatPage: FC = async () => {
 
   const session = await getServerSession(authConfug)
   const data = await getMyChats(session?.access_token!) as MyChatsList
-  // console.log(data)
 
   return (
     <>

@@ -3,7 +3,7 @@ import GooggleProvider from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { SIGN_IN_HANDLERS } from './handlers';
 import { refreshCredentialsAccessToken, refreshGoogleAccessToken } from './refreshToken';
-import { SignInProvider } from '@/types/types';
+import { SignInProvider } from '@/types/users';
 
 export const getCurrentEpochTime = () => {
   return Math.floor(new Date().getTime() / 1000);
@@ -96,12 +96,23 @@ export const authConfug: AuthOptions = {
     },
     async session({ session, user, token }) {
       if (token) {
+        const first_name = token.user.first_name;
+        const last_name = token.user.last_name;
         session.user = token.user;
+        session.user.full_name =
+          first_name && last_name ? `${first_name} ${last_name}` : token.user.username;
         session.error = token.error;
         session.access_token = token.access_token;
       }
 
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
   secret: process.env.AUTH_SECRET!,

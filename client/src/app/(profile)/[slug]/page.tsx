@@ -1,29 +1,34 @@
 import { SignOut } from '@/components/Sign'
-import { authConfug } from '@/configs/auth'
-import { getServerSession } from 'next-auth/next'
 import { FC } from 'react'
 import Image from 'next/image'
 import { Tabs } from '@/components/Tabs'
 import { userInformation } from '@/constants/profile'
 import { getFriendListById } from '@/services/FriendListActions'
-import { Names } from '@/types/types'
+import { TabUserNames, RestrictiveUser } from '@/types/users'
 import { UsersFriends } from '@/types/friends'
+import { getUserBySlug } from '@/services/UserActions'
 
-const Profile: FC = async () => {
+interface Params {
+    slug: string
+}
 
-    const session = await getServerSession(authConfug)
-    const user = session?.user!;
+interface ProfileParams {
+    params: Params
+}
+
+const Profile: FC<ProfileParams> = async ({ params }) => {
+
+    const user = await getUserBySlug(params.slug) as RestrictiveUser
     const name = user.first_name && user?.last_name
         ? `${user?.first_name} ${user?.last_name}`
         : user?.username
 
-    const userInfo = await userInformation();
-    const friendsData = await getFriendListById(session?.user.id!) as UsersFriends
+    const userInfo = await userInformation(user);
+    const friendsData = await getFriendListById(user.id) as UsersFriends
     const friendsInfo = {
-        name: Names.friends,
+        name: TabUserNames.friends,
         list: friendsData.friends
-    }
-    console.log(friendsInfo)
+    } as TabObject
 
     return (
         <>
@@ -31,11 +36,11 @@ const Profile: FC = async () => {
                 <div className="p-px h-100 bg-white rounded-full">
                     <Image
                         alt={name}
-                        src={user.image!} width={250} height={250} className='p-px h-100 bg-violet-600 rounded-full' />
+                        src={user.image!} width={250} height={250} className='p-px h-64 w-64 object-cover bg-violet-600 rounded-full' />
                 </div>
             </div>
             <div className='w-full flex items-center flex-col'>
-                <Tabs profile={[{ ...userInfo }, { ...friendsInfo }]} />
+                <Tabs className="w-full px-2 pb-5 sm:px-0" array={[userInfo, friendsInfo]} />
                 <SignOut />
             </div>
         </>

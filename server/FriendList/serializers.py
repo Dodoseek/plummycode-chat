@@ -1,9 +1,8 @@
 # pylint: disable=E0401
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.serializers import (BooleanField, CharField,
-                                        ModelSerializer,
-                                        PrimaryKeyRelatedField)
+from rest_framework.serializers import (BooleanField, CharField, DateTimeField,
+                                        IntegerField, ModelSerializer)
 from User.serializers import AllUsersSerializer
 
 from .models import FriendList, FriendRequest
@@ -19,38 +18,37 @@ class FriendListSerializer(ModelSerializer):
         fields = ("user", "friends")
 
 
-class MetaClass:
+class MetaData:
     class Meta:
         model = FriendRequest
         fields = ("id", "receiver", "sender", "is_active", "timestamp")
 
 
-class RequestSerializer(MetaClass, ModelSerializer):
+class RequestSerializer(MetaData, ModelSerializer):
     """ Serializer for sending a friend request """
     is_active = BooleanField(read_only=True)
-    sender = PrimaryKeyRelatedField(read_only=True)
+    sender = AllUsersSerializer(read_only=True)
+    receiver = AllUsersSerializer(read_only=True)
+    user = IntegerField(write_only=True)
+    timestamp = DateTimeField(format="%Y.%m.%d %H:%M", read_only=True)
+
+    class Meta:
+        model = FriendRequest
+        fields = ("id", "receiver", "sender", "is_active", "timestamp", "user")
 
 
-class SenderRequestSerializer(MetaClass, ModelSerializer):
-    """ A sterilizer for displaying all sent active friend list requests """
-    receiver = AllUsersSerializer()
-
-
-class ReceiverRequestSerializer(MetaClass, ModelSerializer):
-    """ A sterilizer for displaying all received active requests to the friends list """
-    sender = AllUsersSerializer()
-
-
-class UpdateRequestSerializer(MetaClass, ModelSerializer):
+class UpdateRequestSerializer(MetaData, ModelSerializer):
     """ Serializer for changing the status of a friend request """
     sender = CharField(read_only=True)
     receiver = CharField(read_only=True)
+    timestamp = DateTimeField(format="%Y.%m.%d %H:%M", read_only=True)
 
 
-class AcceptRequestSerializer(MetaClass, ModelSerializer):
+class AcceptRequestSerializer(MetaData, ModelSerializer):
     """ Serializer for accepting/rejecting acceptance to the friends list """
     sender = CharField(read_only=True)
     receiver = CharField(read_only=True)
+    timestamp = DateTimeField(format="%Y.%m.%d %H:%M", read_only=True)
 
     def update(self, instance: FriendRequest, validated_data: dict):
         if validated_data.get("is_active"):

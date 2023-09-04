@@ -93,3 +93,15 @@
 .scroll{
   @apply overflow-y-scroll overflow-x-hidden w-full  h-full rounded-lg
 }
+
+.dropdown-select{
+  @apply py-2 border-b-2 border-purple-500 last:border-none hover:bg-purple-500/40 first:rounded-t-md last:rounded-b-md flex justify-between w-full px-5
+}
+
+.dropdown-success{
+  @apply py-2 border-b-2 border-green-600 last:border-none hover:bg-purple-500/40 first:rounded-t-md last:rounded-b-md flex justify-between w-full px-5
+}
+
+.image-default{
+  @apply h-16 w-16 block rounded-full object-cover
+}

@@ -4,9 +4,9 @@ export async function getMyChats(access_token: string) {
         next: {
             revalidate: 0
         },
-        headers: { 
-            Authorization : `Bearer ${access_token}`
-         }
+        headers: {
+            Authorization: `Bearer ${access_token}`
+        }
     });
 
     return response.json()
